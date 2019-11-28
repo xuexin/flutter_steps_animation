@@ -1,6 +1,10 @@
 # flutter_steps_animation
 
-A new Flutter package.
+A powerful Flutter package for building complex animation step by step.
+
+## Example
+
+![example](example.gif)
 
 ## Getting Started
 
