@@ -12,7 +12,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_steps_animation: ^1.0.1
+  flutter_steps_animation: ^1.0.2
 ```
 
 ## Getting Started
@@ -106,6 +106,9 @@ SingleAnimationBuilder _timeAnimation(int number) {
     );
   }
 
+  //Notice: When multiple animations applied to the same key, the latters will override those former ones.
+  //It's your responsibility to maintain the continuity between these animations,
+  //or the result effect might be jumping around when you have overlapping or breaking timeline.
   MultipleAnimationBuilder _multipleAnimation() {
     final duration = Duration(seconds: 10);
     final builder = MultipleAnimationBuilder(
@@ -245,7 +248,6 @@ SingleAnimationBuilder _timeAnimation(int number) {
       ),
     );
   }
-}
 ```
 
 

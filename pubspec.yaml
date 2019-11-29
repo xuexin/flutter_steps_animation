@@ -1,6 +1,6 @@
 name: flutter_steps_animation
 description: A powerful Flutter package for building complex animation step by step.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/xuexin/flutter_steps_animation
 
 environment:
