@@ -12,7 +12,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_steps_animation: ^1.0.0
+  flutter_steps_animation: ^1.0.1
 ```
 
 ## Getting Started
@@ -60,8 +60,8 @@ class AnimationPageState extends State<AnimationPage>
   Future<Null> _playAnimation(AnimationController controller) async {
     try {
       await controller.forward().orCancel;
-//      await controller.reverse().orCancel;
-      controller.reset();
+      await controller.reverse().orCancel;
+//      controller.reset();
     } on TickerCanceled {}
   }
 
@@ -71,7 +71,6 @@ class AnimationPageState extends State<AnimationPage>
     super.dispose();
   }
 
-}
 ```
 
 Add steps for StepsAnimation
@@ -133,8 +132,18 @@ SingleAnimationBuilder _timeAnimation(int number) {
     builder
         .addAnimatable(
             animatable: Tween<double>(begin: 100, end: 400),
-            from: Duration(seconds: 1),
+            from: Duration.zero,
             duration: Duration(seconds: 4),
+            key: 'height')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 400, end: 400),
+            from: Duration(seconds: 4),
+            duration: Duration(seconds: 1),
+            key: 'height')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 400, end: 100),
+            from: Duration(seconds: 5),
+            duration: Duration(seconds: 5),
             key: 'height')
         .addAnimatable(
             animatable: Tween<double>(begin: 400, end: 100),
@@ -142,21 +151,26 @@ SingleAnimationBuilder _timeAnimation(int number) {
             duration: Duration(seconds: 4),
             key: 'width')
         .addAnimatable(
+            animatable: Tween<double>(begin: 100, end: 100),
+            from: Duration(seconds: 4),
+            duration: Duration(seconds: 1),
+            key: 'width')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 100, end: 400),
+            from: Duration(seconds: 5),
+            duration: Duration(seconds: 3),
+            key: 'width')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 400, end: 400),
+            from: Duration(seconds: 8),
+            duration: Duration(seconds: 2),
+            key: 'width')
+        .addAnimatable(
             animatable:
                 ColorTween(begin: Colors.green, end: Colors.yellowAccent),
             from: Duration(seconds: 2),
             duration: Duration(seconds: 4),
             key: 'color')
-        .addAnimatable(
-            animatable: Tween<double>(begin: 400, end: 100),
-            from: Duration(seconds: 5),
-            duration: Duration(seconds: 5),
-            key: 'height')
-        .addAnimatable(
-            animatable: Tween<double>(begin: 100, end: 400),
-            from: Duration(seconds: 5),
-            duration: Duration(seconds: 5),
-            key: 'width')
         .addAnimatable(
             animatable: ColorTween(begin: Colors.yellowAccent, end: Colors.red),
             from: Duration(seconds: 4),
@@ -173,9 +187,19 @@ SingleAnimationBuilder _timeAnimation(int number) {
             duration: Duration(seconds: 2),
             key: 'radius')
         .addAnimatable(
-            animatable: Tween<double>(begin: 200, end: 0),
+            animatable: Tween<double>(begin: 200, end: 200),
             from: Duration(seconds: 5),
-            duration: Duration(seconds: 5),
+            duration: Duration(seconds: 1),
+            key: 'radius')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 200, end: 0),
+            from: Duration(seconds: 6),
+            duration: Duration(seconds: 3),
+            key: 'radius')
+        .addAnimatable(
+            animatable: Tween<double>(begin: 0, end: 0),
+            from: Duration(seconds: 9),
+            duration: Duration(seconds: 1),
             key: 'radius');
     return builder;
   }
@@ -221,6 +245,7 @@ SingleAnimationBuilder _timeAnimation(int number) {
       ),
     );
   }
+}
 ```
 
 
