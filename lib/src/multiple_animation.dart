@@ -31,6 +31,7 @@ class MultipleAnimationBuilder extends OneStepAnimationBuilder {
     @required Duration duration,
     @required key,
   }) {
+    assert(animatable != null);
     assert(from >= Duration.zero);
     assert(from + duration <= this.duration);
     assert(duration > Duration.zero);
@@ -49,7 +50,8 @@ class MultipleAnimationBuilder extends OneStepAnimationBuilder {
   }
 }
 
-class MultipleAnimation extends OneStepAnimation<Map<Object, Animation>, MultipleAnimationData> {
+class MultipleAnimation
+    extends OneStepAnimation<Map<Object, Animation>, MultipleAnimationData> {
   MultipleAnimation(MultipleAnimationData data,
       OneStepBuildAnimation<Map<Object, Animation>> oneStepBuildAnimation)
       : super(data, oneStepBuildAnimation);
@@ -73,7 +75,7 @@ class MultipleAnimationData
       Duration totalDuration,
       AnimationController controller,
       List<_MultipleAnimationBuildInfo> list) {
-    final Map<Object, Animatable> animatableMap = {};
+    final Map<Object, _StartTimeSortedAnimatable> animatableMap = {};
     final startInMilliseconds = startDuration.inMilliseconds;
     final totalInMilliseconds = totalDuration.inMilliseconds;
     list.forEach((_MultipleAnimationBuildInfo multipleInfo) {
@@ -87,11 +89,10 @@ class MultipleAnimationData
       final animatable = multipleInfo.animatable.chain(interval);
       final key = multipleInfo.key;
       if (animatableMap[key] == null) {
-        animatableMap[key] = animatable;
+        animatableMap[key] = _StartTimeSortedAnimatable()
+          ..addAnimatable(animatable, begin, end, key);
       } else {
-        final src = animatableMap[key];
-        animatableMap[key] = _DstOverAnimatable(
-            begin: begin, end: end, dst: animatable, src: src);
+        animatableMap[key].addAnimatable(animatable, begin, end, key);
       }
     });
     final Map<Object, Animation> map = {};
@@ -102,25 +103,60 @@ class MultipleAnimationData
   }
 }
 
-// Just like BlendMode.dstOver, dst over src
-class _DstOverAnimatable extends Animatable {
+class _AnimatableAndStartTime {
+  final Animatable animatable;
   final double begin;
   final double end;
-  final Animatable dst;
-  final Animatable src;
 
-  _DstOverAnimatable({
-    @required this.begin,
-    @required this.end,
-    @required this.dst,
-    this.src,
-  });
+  _AnimatableAndStartTime(this.animatable, this.begin, this.end);
+}
+
+class _StartTimeSortedAnimatable extends Animatable {
+  final animatableList = <_AnimatableAndStartTime>[];
+
+  void addAnimatable(Animatable animatable, double begin, double end, Object key) {
+    animatableList.add(_AnimatableAndStartTime(animatable, begin, end));
+    animatableList.sort((a, b) {
+      return a.begin.compareTo(b.begin);
+    });
+    assert(() {
+      _AnimatableAndStartTime preAnimatable;
+      for (final animatable in animatableList) {
+        if (preAnimatable == null) {
+          preAnimatable = animatable;
+          continue;
+        }
+        if (preAnimatable.end > animatable.begin) {
+          throw 'Animatable of \'$key\' conflicts';
+        }
+        preAnimatable = animatable;
+      }
+      return true;
+    }());
+  }
+
+  Animatable getAppropriateAnimatable(double t) {
+    assert(animatableList.length != 0);
+    for (int i = 0; i < animatableList.length; ++i) {
+      switch (t.compareTo(animatableList[i].begin)) {
+        case -1:
+          int index = i - 1 >= 0 ? i - 1 : 0;
+          return animatableList[index].animatable;
+          break;
+        case 0:
+          return animatableList[i].animatable;
+          break;
+        case 1:
+          continue;
+          break;
+      }
+    }
+    return animatableList.last.animatable;
+  }
 
   @override
   transform(double t) {
-    if (src != null && !(t >= begin && t <= end)) {
-      return src.transform(t);
-    }
-    return dst.transform(t);
+    final currentAnimatable = getAppropriateAnimatable(t);
+    return currentAnimatable.transform(t);
   }
 }
