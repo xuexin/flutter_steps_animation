@@ -1,11 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_steps_animation/flutter_steps_animation.dart';
+# flutter_steps_animation
 
-class AnimationPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => AnimationPageState();
-}
+一个强大的动画库，可以让你分布完成一个复杂动画
 
+## 一个简单的例子
+
+![example](example.gif)
+
+## 添加依赖
+
+添加依赖:
+
+```yaml
+dependencies:
+  flutter_steps_animation: ^1.1.0
+```
+
+## 代码示例
+
+使用StepsAnimation和平常的Animation没有太多不同：
+
+```dart
 class AnimationPageState extends State<AnimationPage>
     with SingleTickerProviderStateMixin {
   StepsAnimation stepsAnimation;
@@ -57,7 +71,25 @@ class AnimationPageState extends State<AnimationPage>
     super.dispose();
   }
 
-  SingleAnimationBuilder _timeAnimation(int number) {
+```
+
+添加步骤，每个步骤的持续时间相加，即为整个动画的持续时间
+
+```dart
+stepsAnimation = StepsAnimationBuilder()
+        .addStepBuilder(_timeAnimation(1))
+        .addStepBuilder(_timeAnimation(2))
+        .addStepBuilder(_timeAnimation(3))
+        .addStepBuilder(_multipleAnimation())
+        .addStepBuilder(_waitStep(2))
+        .addStepBuilder(_moreStepsAnimation())
+        .animation(this);
+```
+
+示例图片中，所有动画的代码，看着很长，其实真的很简单
+
+```dart
+SingleAnimationBuilder _timeAnimation(int number) {
     final duration = Duration(milliseconds: 500);
     return SingleAnimationBuilder(
       duration: duration,
@@ -184,4 +216,7 @@ class AnimationPageState extends State<AnimationPage>
       ),
     );
   }
-}
+```
+
+
+

@@ -1,5 +1,7 @@
 # flutter_steps_animation
 
+[中文文档](README_CN.md)
+
 A powerful Flutter package for building complex animation step by step.
 
 ## Example
@@ -12,7 +14,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  flutter_steps_animation: ^1.0.2
+  flutter_steps_animation: ^1.1.0
 ```
 
 ## Getting Started
@@ -106,9 +108,6 @@ SingleAnimationBuilder _timeAnimation(int number) {
     );
   }
 
-  //Notice: When multiple animations applied to the same key, the latters will override those former ones.
-  //It's your responsibility to maintain the continuity between these animations,
-  //or the result effect might be jumping around when you have overlapping or breaking timeline.
   MultipleAnimationBuilder _multipleAnimation() {
     final duration = Duration(seconds: 10);
     final builder = MultipleAnimationBuilder(
@@ -139,48 +138,29 @@ SingleAnimationBuilder _timeAnimation(int number) {
             duration: Duration(seconds: 4),
             key: 'height')
         .addAnimatable(
-            animatable: Tween<double>(begin: 400, end: 400),
-            from: Duration(seconds: 4),
-            duration: Duration(seconds: 1),
-            key: 'height')
-        .addAnimatable(
             animatable: Tween<double>(begin: 400, end: 100),
             from: Duration(seconds: 5),
             duration: Duration(seconds: 5),
             key: 'height')
         .addAnimatable(
-            animatable: Tween<double>(begin: 400, end: 100),
+            animatable: Tween<double>(begin: 400, end: 150),
             from: Duration.zero,
             duration: Duration(seconds: 4),
             key: 'width')
         .addAnimatable(
-            animatable: Tween<double>(begin: 100, end: 100),
-            from: Duration(seconds: 4),
-            duration: Duration(seconds: 1),
-            key: 'width')
-        .addAnimatable(
-            animatable: Tween<double>(begin: 100, end: 400),
+            animatable: Tween<double>(begin: 150, end: 400),
             from: Duration(seconds: 5),
             duration: Duration(seconds: 3),
             key: 'width')
         .addAnimatable(
-            animatable: Tween<double>(begin: 400, end: 400),
-            from: Duration(seconds: 8),
-            duration: Duration(seconds: 2),
-            key: 'width')
-        .addAnimatable(
-            animatable:
-                ColorTween(begin: Colors.green, end: Colors.yellowAccent),
+            animatable: ColorTween(
+                begin: Colors.green[400], end: Colors.yellowAccent[700]),
             from: Duration(seconds: 2),
             duration: Duration(seconds: 4),
             key: 'color')
         .addAnimatable(
-            animatable: ColorTween(begin: Colors.yellowAccent, end: Colors.red),
-            from: Duration(seconds: 4),
-            duration: Duration(seconds: 3),
-            key: 'color')
-        .addAnimatable(
-            animatable: ColorTween(begin: Colors.red, end: Colors.black),
+            animatable: ColorTween(
+                begin: Colors.yellowAccent[700], end: Colors.red[800]),
             from: Duration(seconds: 7),
             duration: Duration(seconds: 3),
             key: 'color')
@@ -190,19 +170,9 @@ SingleAnimationBuilder _timeAnimation(int number) {
             duration: Duration(seconds: 2),
             key: 'radius')
         .addAnimatable(
-            animatable: Tween<double>(begin: 200, end: 200),
-            from: Duration(seconds: 5),
-            duration: Duration(seconds: 1),
-            key: 'radius')
-        .addAnimatable(
             animatable: Tween<double>(begin: 200, end: 0),
             from: Duration(seconds: 6),
             duration: Duration(seconds: 3),
-            key: 'radius')
-        .addAnimatable(
-            animatable: Tween<double>(begin: 0, end: 0),
-            from: Duration(seconds: 9),
-            duration: Duration(seconds: 1),
             key: 'radius');
     return builder;
   }
